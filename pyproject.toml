@@ -26,6 +26,8 @@ tzdata = { version = "^2024.2", markers = "sys_platform == 'win32'" }
 django-extensions = "^3.2.3"
 django-debug-toolbar = "^4.4.6"
 psycopg2-binary = "^2.9.10"
+whitenoise = "^6.8.2"
+gunicorn = "^23.0.0"
 
 [build-system]
 requires = ["poetry-core"]
