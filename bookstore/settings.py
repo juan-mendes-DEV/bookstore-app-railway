@@ -85,17 +85,26 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+#         "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+#         "USER": os.environ.get("SQL_USER", "user"),
+#         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+#         "HOST": os.environ.get("SQL_HOST", "localhost"),
+#         "PORT": os.environ.get("SQL_PORT", "5432"),
+#     }
+# }
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
+        "USER": os.environ.get("SQL_USER", "dev"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "dev"),
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -158,6 +167,6 @@ DEBUG = int(os.environ.get("DEBUG", default=0))
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'jpirate.pythonanywhere.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'bookstore-app-railway-production.up.railway.app']
 
 #lembrar do pull request e mudar final
