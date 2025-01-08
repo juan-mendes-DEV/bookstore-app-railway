@@ -1,0 +1,87 @@
+name: Python Pull Workflow
+
+on: [pull_request]
+
+jobs:
+  qa:
+    name: Quality check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2  # Usando a versão mais recente do checkout
+     
+      - name: Set up Python
+        uses: actions/setup-python@v2  # Usando a versão mais estável
+        with:
+          python-version: 3.12
+
+      - name: Cache poetry dependencies
+        uses: actions/cache@v2  # Cache para otimizar dependências
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Install poetry
+        run: |
+          pip install -U pip
+          pip install poetry
+          poetry install  # Instalação sem as dependências de desenvolvimento, caso não precise delas no QA
+
+
+      - name: View poetry --help
+        run: poetry --help
+
+      - name: Test
+        run: |
+          poetry run python manage.py test
+
+      - name: Wemake Python Stylguide
+        uses: wemake-services/wemake-python-styleguide@0.16.0
+        continue-on-error: true
+        with:
+          reporter: 'github-pr-review'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+# name: Python Pull Request Workflow
+# on: [pull_request]
+# jobs:
+
+#   qa:
+#     name: Quality check
+#     runs-on: ubuntu-18.04
+#     steps:
+#       - uses: actions/checkout@v1
+#       - name: Set up Python
+#         uses: actions/setup-python@master
+#         with:
+#           python-version: 3.8
+#       - name: Install poetry
+#         run: |
+#           pip install -U pip
+#           pip install poetry
+#           poetry install
+#         env:
+#           POETRY_VIRTUALENVS_CREATE: false
+
+#       - name: View poetry --help
+#         run: poetry --help
+
+#       - name: Install dependencies
+#         shell: bash
+#         run: python -m poetry install
+
+#       - name: Test
+#         run: |
+#           poetry run python manage.py test
+#       - name: Wemake Python Stylguide
+#         uses: wemake-services/wemake-python-styleguide@0.16.0
+#         continue-on-error: true
+#         with:
+#           reporter: 'github-pr-review'
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

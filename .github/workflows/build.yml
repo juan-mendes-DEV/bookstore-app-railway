@@ -1,0 +1,41 @@
+name: Python application
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.12]
+        poetry-version: [1.8]  # Atualize para uma versão mais recente do Poetry
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install poetry ${{ matrix.poetry-version }}
+      run: |
+        python -m ensurepip
+        python -m pip install --upgrade pip
+        python -m pip install poetry==${{ matrix.poetry-version }}
+
+    - name: Verify Poetry installation
+      run: poetry --version  # Verifica se o Poetry foi instalado corretamente
+
+    - name: Install dependencies
+      run: |
+        poetry install  # Instala as dependências do Poetry
+
+    - name: Set DJANGO_SECRET_KEY
+      run: echo "DJANGO_SECRET_KEY=your_secret_key" >> $GITHUB_ENV
+
+    - name: Test
+      run: |
+        poetry run python manage.py test

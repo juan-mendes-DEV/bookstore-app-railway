@@ -1,0 +1,23 @@
+asgiref==3.8.1
+-e git+ssh://git@github.com/juan-mendes-DEV/bookstore.git@2803d3a910659863fccfe75400a161dbb2b84973#egg=bookstore
+Django==5.1.4
+django-debug-toolbar==4.4.6
+django-extensions==3.2.3
+django-rest-framework==0.1.0
+djangorestframework==3.15.2
+factory_boy==3.3.1
+Faker==33.1.0
+gitdb==4.0.11
+GitPython==3.1.43
+iniconfig==2.0.0
+packaging==24.2
+pluggy==1.5.0
+psycopg2-binary==2.9.10
+pytest==8.3.4
+pytest-django==4.9.0
+python-dateutil==2.9.0.post0
+six==1.17.0
+smmap==5.0.1
+sqlparse==0.5.3
+typing_extensions==4.12.2
+whitenoise==6.8.2
