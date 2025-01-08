@@ -17,15 +17,16 @@ ENV PYTHONUNBUFFERED=1 \
 ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
 # Instala dependências do sistema
-RUN apt-get update && apt-get install --no-install-recommends -y \
-    curl build-essential libpq-dev gcc python3-pip
+RUN apt-get update -y && apt-get install --no-install-recommends -y \
+    curl build-essential libpq-dev gcc python3-pip && \
+    rm -rf /var/lib/apt/lists/*
 
 # Instala o Poetry usando pip
 RUN pip install poetry
 
 # Instala dependências do Postgres
-RUN apt-get update && apt-get -y install libpq-dev gcc \
-    && pip install psycopg2
+RUN apt-get update -y && apt-get install -y libpq-dev gcc && \
+    pip install psycopg2
 
 # Copia os arquivos de configuração do Poetry
 WORKDIR $PYSETUP_PATH
