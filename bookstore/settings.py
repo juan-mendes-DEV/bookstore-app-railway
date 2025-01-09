@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
-from urllib.parse import urlparse
-print(os.environ.get("SQL_HOST"))
+import dj_database_url  # Para parsear a URL do banco de dados
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Alterar para False em produção
@@ -56,14 +56,10 @@ WSGI_APPLICATION = "bookstore.wsgi.application"
 
 # Banco de dados PostgreSQL
 DATABASES = {
-    "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
-        "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
-        "USER": os.environ.get("SQL_USER", "postgres"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "PtyCUJaEoPBnxrcNeHHuxjFjUufIQILk"),
-        "HOST": os.environ.get("SQL_HOST", "postgres.railway.internal"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
-    }
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),  # Aqui busca pela variável de ambiente DATABASE_URL
+        conn_max_age=600,  # Aumenta o tempo de vida da conexão (opcional)
+    )
 }
 
 # Validação de senha
@@ -143,9 +139,5 @@ LOGGING = {
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# export SQL_HOST="postgres.railway.internal"
-# export SQL_USER="user"
-# export SQL_PASSWORD="password"
-# export SQL_DATABASE="bookstore_db"
-# export SQL_PORT="5432"
+# export DATABASE_URL="postgres://user:password@postgres.railway.internal:5432/bookstore_db"
 # export DJANGO_SECRET_KEY="your_secret_key_here"
