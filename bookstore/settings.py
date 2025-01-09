@@ -56,24 +56,20 @@ WSGI_APPLICATION = "bookstore.wsgi.application"
 
 # Banco de dados PostgreSQL
 database_url = os.environ.get('DATABASE_URL', '')
-if database_url:
-    url = urlparse(database_url)
-    
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': url.path[1:],  # Remove a barra inicial
-        'USER': url.username,
-        'PASSWORD': url.password,
-        'HOST': url.hostname,
-        'PORT': url.port,
-        'OPTIONS': {
-            'sslmode': 'require',  # Força o uso de SSL
-        },
-    }
-else:
-    print("DATABASE_URL não configurada.")
-        
-        # Validação de senha
+url = urlparse(database_url)
+
+DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': os.environ.get('PGDATABASE'),
+    'USER': os.environ.get('PGUSER'),
+    'PASSWORD': os.environ.get('PGPASSWORD'),
+    'HOST': os.environ.get('PGHOST'),
+    'PORT': os.environ.get('PGPORT'),
+    'OPTIONS': {
+        'sslmode': 'require',  # Adicionar esta linha para forçar a conexão via SSL
+    },
+}
+# Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
