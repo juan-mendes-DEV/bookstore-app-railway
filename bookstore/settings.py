@@ -3,7 +3,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = True  # Altere para True para fins de teste
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -57,8 +57,8 @@ DATABASES = {
     "default": {
         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
         "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
-        "USER": os.environ.get("SQL_USER", "dev"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "dev"),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
@@ -101,20 +101,22 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "default_secret_key_for_testing")
+# SECRET_KEY
+SECRET_KEY = "default_secret_key_for_testing"  # Coloque uma chave segura temporariamente
 
-# ALLOWED_HOSTS = ['bookstore-app-railway-production.up.railway.app']
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(" ") + ['bookstore-app-railway-production.up.railway.app']
+# ALLOWED_HOSTS (Comente temporariamente as restrições)
+ALLOWED_HOSTS = ["*"]  # Aceitar qualquer host por enquanto, apenas para testes
 
-# Segurança
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+# Segurança - Desative essas configurações para testes
+CSRF_COOKIE_SECURE = False  # Desative para testes
+SESSION_COOKIE_SECURE = False  # Desative para testes
+SECURE_SSL_REDIRECT = False  # Desative para testes
 X_FRAME_OPTIONS = 'DENY'
-SECURE_HSTS_SECONDS = 3600
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_SECONDS = 0  # Desative para testes
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False  # Desative para testes
+SECURE_HSTS_PRELOAD = False  # Desative para testes
 
+# Debug Toolbar
 if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
     MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
