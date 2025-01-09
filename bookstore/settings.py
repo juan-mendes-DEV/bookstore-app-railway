@@ -63,7 +63,7 @@ DATABASES = {
         "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
         "USER": os.environ.get("SQL_USER", "user"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": "postgres.railway.internal",  # Verifique se está correto
+        "HOST": os.environ.get("SQL_HOST", "localhost"),  # Verifique se está correto
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
