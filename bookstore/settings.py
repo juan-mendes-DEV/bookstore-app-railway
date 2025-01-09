@@ -80,7 +80,7 @@ else:
             "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
             "USER": os.environ.get("SQL_USER", "user"),
             "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-            "HOST": os.environ.get("SQL_HOST", "localhost"),
+            "HOST": os.environ.get("SQL_HOST", "postgres.railway.internal"),
             "PORT": os.environ.get("SQL_PORT", "5432"),
             'OPTIONS': {
                 'sslmode': 'require',  # Requer SSL para a conexão
