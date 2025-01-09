@@ -3,7 +3,6 @@ asgiref==3.8.1
 Django==5.1.4
 django-debug-toolbar==4.4.6
 django-extensions==3.2.3
-django-rest-framework==0.1.0
 djangorestframework==3.15.2
 factory_boy==3.3.1
 Faker==33.1.0
