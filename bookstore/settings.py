@@ -55,15 +55,13 @@ TEMPLATES = [
 WSGI_APPLICATION = "bookstore.wsgi.application"
 
 # Banco de dados PostgreSQL
-DATABASE_URL = os.environ.get('DATABASE_URL')  # URL completa fornecida pelo Railway
-
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
         "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
         "USER": os.environ.get("SQL_USER", "user"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "postgres.railway.internal"),  # Verifique se está correto
+        "HOST": os.environ.get("SQL_HOST", "postgres.railway.internal"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
