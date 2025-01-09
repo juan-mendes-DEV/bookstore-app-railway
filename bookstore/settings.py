@@ -1,9 +1,10 @@
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True  # Altere para True para fins de teste
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -22,14 +23,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Para servir arquivos estáticos
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",  # Ativado em DEBUG
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "bookstore.urls"
@@ -52,17 +53,37 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "bookstore.wsgi.application"
 
-# Banco de dados PostgreSQL
-DATABASES = {
-    "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
-        "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "bookstore-app-railway.railway.internal"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+# Configuração do banco de dados
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    url = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': url.path[1:],  # Nome do banco de dados
+            'USER': url.username,  # Usuário do banco
+            'PASSWORD': url.password,  # Senha do banco
+            'HOST': url.hostname,  # Host do banco
+            'PORT': url.port,  # Porta do banco
+            'OPTIONS': {
+                'sslmode': 'require',  # Requer SSL
+            },
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("PGDATABASE", "postgres"),
+            "USER": os.getenv("PGUSER", "postgres"),
+            "PASSWORD": os.getenv("PGPASSWORD", "password"),
+            "HOST": os.getenv("PGHOST", "localhost"),
+            "PORT": os.getenv("PGPORT", "5432"),
+            "OPTIONS": {
+                "sslmode": "require",
+            },
+        }
+    }
 
 # Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
@@ -78,15 +99,12 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+# Arquivos estáticos
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Diretório para arquivos coletados
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# WhiteNoise para servir arquivos estáticos
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Django REST Framework
+# Configuração do Django REST Framework
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 5,
@@ -97,43 +115,44 @@ REST_FRAMEWORK = {
     ],
 }
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+# Configurações de segurança
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "default_secret_key")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# SECRET_KEY
-SECRET_KEY = "default_secret_key_for_testing"  # Coloque uma chave segura temporariamente
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+else:
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
 
-# ALLOWED_HOSTS (Comente temporariamente as restrições)
-ALLOWED_HOSTS = ["*"]  # Aceitar qualquer host por enquanto, apenas para testes
-
-# Segurança - Desative essas configurações para testes
-CSRF_COOKIE_SECURE = False  # Desative para testes
-SESSION_COOKIE_SECURE = False  # Desative para testes
-SECURE_SSL_REDIRECT = False  # Desative para testes
-X_FRAME_OPTIONS = 'DENY'
-SECURE_HSTS_SECONDS = 0  # Desative para testes
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False  # Desative para testes
-SECURE_HSTS_PRELOAD = False  # Desative para testes
-
-
+# Log de erros
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'django.log',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "django.log",
         },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True,
         },
     },
 }
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+INTERNAL_IPS = ["127.0.0.1"]
