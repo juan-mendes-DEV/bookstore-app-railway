@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from urllib.parse import urlparse
-
+print(os.environ.get("SQL_HOST"))
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Alterar para False em produção
@@ -63,7 +63,7 @@ DATABASES = {
         "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
         "USER": os.environ.get("SQL_USER", "user"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "postgres.railway.internal"),  # Verifique se está correto
+        "HOST": "postgres.railway.internal",  # Verifique se está correto
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
