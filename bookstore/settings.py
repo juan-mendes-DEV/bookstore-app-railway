@@ -55,20 +55,25 @@ TEMPLATES = [
 WSGI_APPLICATION = "bookstore.wsgi.application"
 
 # Banco de dados PostgreSQL
-DATABASE_URL = os.environ.get('DATABASE_URL')  # URL completa fornecida pelo Railway
-
-DATABASES = {
-    "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
-        "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),  # Verifique se está correto
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+database_url = os.environ.get('DATABASE_URL', '')
+if database_url:
+    url = urlparse(database_url)
+    
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': url.path[1:],  # Remove a barra inicial
+        'USER': url.username,
+        'PASSWORD': url.password,
+        'HOST': url.hostname,
+        'PORT': url.port,
+        'OPTIONS': {
+            'sslmode': 'require',  # Força o uso de SSL
+        },
     }
-}
-
-# Validação de senha
+else:
+    print("DATABASE_URL não configurada.")
+        
+        # Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
