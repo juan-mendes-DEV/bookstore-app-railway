@@ -29,6 +29,7 @@ psycopg2-binary = "^2.9.10"
 whitenoise = "^6.8.2"
 gunicorn = "^23.0.0"
 dj-database-url = "^2.3.0"
+django-environ = "^0.11.2"
 
 [build-system]
 requires = ["poetry-core"]
