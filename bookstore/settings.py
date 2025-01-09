@@ -1,10 +1,13 @@
 import os
 from pathlib import Path
-import dj_database_url  # Para parsear a URL do banco de dados
+import environ
+
+# Inicializa o ambiente
+env = environ.Env()
+environ.Env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Alterar para False em produção
 DEBUG = True  # Altere para False em produção
 
 INSTALLED_APPS = [
@@ -24,14 +27,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Para servir arquivos estáticos
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",  # Ativado em DEBUG
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "bookstore.urls"
@@ -54,8 +57,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "bookstore.wsgi.application"
 
-# Banco de dados PostgreSQL
-
+# Banco de dados PostgreSQL com environ
 DATABASES = {
     "default": env.db("DATABASE_URL", default="postgresql://postgres:PtyCUJaEoPBnxrcNeHHuxjFjUufIQILk@roundhouse.proxy.rlwy.net:33406/railway")
 }
@@ -68,21 +70,17 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# Internacionalização
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Diretório para arquivos coletados
-
-# WhiteNoise para servir arquivos estáticos
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Django REST Framework
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 5,
@@ -97,21 +95,17 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-# SECRET_KEY
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'default_secret_key_for_testing')  # Coloque uma chave segura temporariamente
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'default_secret_key_for_testing')
 
-# ALLOWED_HOSTS (Comente temporariamente as restrições)
-ALLOWED_HOSTS = ["*"]  # Aceitar qualquer host por enquanto, apenas para testes
+ALLOWED_HOSTS = ["*"]
 
-# Segurança - Desative essas configurações para testes
-CSRF_COOKIE_SECURE = False  # Desative para testes
-SESSION_COOKIE_SECURE = False  # Desative para testes
-SECURE_SSL_REDIRECT = False  # Desative para testes
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False
 X_FRAME_OPTIONS = 'DENY'
-SECURE_HSTS_SECONDS = 0  # Desative para testes
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False  # Desative para testes
-SECURE_HSTS_PRELOAD = False  # Desative para testes
-
+SECURE_HSTS_SECONDS = 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
 
 LOGGING = {
     'version': 1,
@@ -136,6 +130,3 @@ LOGGING = {
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# export DATABASE_URL="postgres://user:password@postgres.railway.internal:5432/bookstore_db"
-# export DJANGO_SECRET_KEY="your_secret_key_here"
