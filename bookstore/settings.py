@@ -104,7 +104,8 @@ INTERNAL_IPS = [
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "default_secret_key_for_testing")
 
 # ALLOWED_HOSTS = ['bookstore-app-railway-production.up.railway.app']
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(" ")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(" ") + ['bookstore-app-railway-production.up.railway.app']
+
 # Segurança
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
