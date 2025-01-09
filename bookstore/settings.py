@@ -56,8 +56,16 @@ WSGI_APPLICATION = "bookstore.wsgi.application"
 
 # Banco de dados PostgreSQL
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_PUBLIC_URL'))
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
+        "USER": os.environ.get("SQL_USER", "postgres"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "PtyCUJaEoPBnxrcNeHHuxjFjUufIQILk"),
+        "HOST": os.environ.get("SQL_HOST", "postgres.railway.internal"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
+    }
 }
+
 # Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
