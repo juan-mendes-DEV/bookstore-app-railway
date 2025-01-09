@@ -57,17 +57,19 @@ WSGI_APPLICATION = "bookstore.wsgi.application"
 
 # Banco de dados PostgreSQL
 # Usa a variável DATABASE_URL, mas mantém as variáveis de configuração explícitas
-
 DATABASE_URL = os.getenv("DATABASE_URL")  # Usará a URL do banco de dados, se fornecida
 
 if DATABASE_URL:
-    # Se a variável DATABASE_URL estiver configurada, usa ela
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=DATABASE_URL,  # Aqui busca pela variável de ambiente DATABASE_URL
-            conn_max_age=600,  # Aumenta o tempo de vida da conexão (opcional)
-        )
-    }
+    try:
+        # Tenta analisar a URL de banco de dados
+        DATABASES = {
+            "default": dj_database_url.config(
+                default=DATABASE_URL,  # Aqui busca pela variável de ambiente DATABASE_URL
+                conn_max_age=600,  # Aumenta o tempo de vida da conexão (opcional)
+            )
+        }
+    except ValueError:
+        raise ValueError("A URL do banco de dados configurada em DATABASE_URL é inválida!")
 else:
     # Caso contrário, usa as variáveis tradicionais do banco de dados
     DATABASES = {
@@ -80,7 +82,6 @@ else:
             "PORT": os.environ.get("SQL_PORT", "5432"),
         }
     }
-
 # Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
