@@ -57,36 +57,16 @@ WSGI_APPLICATION = "bookstore.wsgi.application"
 # Banco de dados PostgreSQL
 DATABASE_URL = os.environ.get('DATABASE_URL')  # URL completa fornecida pelo Railway
 
-if DATABASE_URL:
-    url = urlparse(DATABASE_URL)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': url.path[1:],  # O nome do banco de dados
-            'USER': url.username,   # O usuário do banco de dados
-            'PASSWORD': url.password,  # A senha do banco de dados
-            'HOST': url.hostname,   # O host do banco de dados
-            'PORT': url.port,       # A porta do banco de dados
-            'OPTIONS': {
-                'sslmode': 'require',  # Requer SSL para a conexão
-            }
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "postgres.railway.internal"),  # Verifique se está correto
+        "PORT": os.environ.get("SQL_PORT", "5432"),
     }
-else:
-    # Caso não tenha DATABASE_URL, use as variáveis de ambiente
-    DATABASES = {
-        "default": {
-            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
-            "NAME": os.environ.get("SQL_DATABASE", "bookstore_db"),
-            "USER": os.environ.get("SQL_USER", "user"),
-            "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-            "HOST": os.environ.get("SQL_HOST", "postgres.railway.internal"),
-            "PORT": os.environ.get("SQL_PORT", "5432"),
-            'OPTIONS': {
-                'sslmode': 'require',  # Requer SSL para a conexão
-            }
-        }
-    }
+}
 
 # Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
