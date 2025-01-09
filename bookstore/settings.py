@@ -116,10 +116,6 @@ SECURE_HSTS_SECONDS = 0  # Desative para testes
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False  # Desative para testes
 SECURE_HSTS_PRELOAD = False  # Desative para testes
 
-# Debug Toolbar
-if DEBUG:
-    INSTALLED_APPS.append('debug_toolbar')
-    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
 LOGGING = {
     'version': 1,
