@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from urllib.parse import urlparse
 import dj_database_url  # Para parsear a URL do banco de dados
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,7 +55,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "bookstore.wsgi.application"
 
 # Banco de dados PostgreSQL
-# Usa a variável DATABASE_URL, mas mantém as variáveis de configuração explícitas
 DATABASE_URL = os.getenv("DATABASE_URL")  # Usará a URL do banco de dados, se fornecida
 
 if DATABASE_URL:
@@ -82,6 +80,7 @@ else:
             "PORT": os.environ.get("SQL_PORT", "5432"),
         }
     }
+
 # Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
